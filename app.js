@@ -28,7 +28,7 @@ const btnSetup = document.getElementById('btnSetup');
  */
 function formatTime(ms) {
     const totalCentiseconds = Math.floor(ms / 10);
-    
+
     const minutes = Math.floor(totalCentiseconds / 6000);
     const seconds = Math.floor((totalCentiseconds % 6000) / 100);
     const centis = totalCentiseconds % 100;
@@ -48,6 +48,15 @@ function updateDisplay() {
     if (isRunning) {
         currentElapsed = (Date.now() - startTime) + elapsedDuration;
     }
+
+    // Emergency Mode Check: 17 minutes = 17 * 60 * 1000 = 1020000 ms
+    const CRITICAL_THRESHOLD = 17 * 60 * 1000;
+    if (currentElapsed >= CRITICAL_THRESHOLD) {
+        document.body.classList.add('mode-critical');
+    } else {
+        document.body.classList.remove('mode-critical');
+    }
+
     displayEl.textContent = formatTime(currentElapsed);
 }
 
@@ -64,35 +73,35 @@ function tick() {
 
 function startTimer() {
     if (isRunning) return;
-    
+
     isRunning = true;
     startTime = Date.now();
     tick();
-    
+
     updateButtonStates();
 }
 
 function stopTimer() {
     if (!isRunning) return;
-    
+
     isRunning = false;
     cancelAnimationFrame(animationFrameId);
     // Accumulate the time that passed during this run
     elapsedDuration += Date.now() - startTime;
     updateDisplay(); // Final clean update
-    
+
     updateButtonStates();
 }
 
 function resetTimer() {
     // Can generally reset at any time, but standard behavior usually implies stop first or just force it.
     // User requirement: "Reset to 0 (execute when stopped, or if running stopped->reset is ok, consistent behavior)"
-    
+
     // Check if running, if so stop first
     if (isRunning) {
         stopTimer();
     }
-    
+
     elapsedDuration = 0;
     updateDisplay();
     updateButtonStates();
@@ -101,7 +110,7 @@ function resetTimer() {
 function setupTimer() {
     // Requirement: "+1 minute to display initial value (only when stopped)"
     if (isRunning) return;
-    
+
     elapsedDuration += 60000; // 60 seconds * 1000
     updateDisplay();
 }
@@ -130,12 +139,22 @@ btnStop.addEventListener('click', stopTimer);
 btnReset.addEventListener('click', resetTimer);
 btnSetup.addEventListener('click', setupTimer);
 
+// Episode Count Logic
+const episodeDisplay = document.getElementById('episodeDisplay');
+let currentEpisode = 1;
+
+function updateEpisode(diff) {
+    currentEpisode += diff;
+    if (currentEpisode < 1) currentEpisode = 1;
+    episodeDisplay.textContent = currentEpisode;
+}
+
 // Keyboard Shortcuts
 document.addEventListener('keydown', (e) => {
     // Ignore if user is typing in an input (unlikely here but good practice)
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    switch(e.code) {
+    switch (e.code) {
         case 'Space':
             e.preventDefault(); // Prevent scrolling
             toggleTimer();
@@ -145,6 +164,14 @@ document.addEventListener('keydown', (e) => {
             break;
         case 'KeyS':
             setupTimer();
+            break;
+        case 'ArrowUp':
+            e.preventDefault();
+            updateEpisode(1);
+            break;
+        case 'ArrowDown':
+            e.preventDefault();
+            updateEpisode(-1);
             break;
     }
 });

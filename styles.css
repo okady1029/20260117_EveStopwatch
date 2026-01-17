@@ -1,12 +1,28 @@
 :root {
     --eva-bg: #000000;
-    --eva-red: #ff0000; /* Primary EVA red */
-    --eva-red-dim: #cc0000;
-    --eva-orange: #ff9900; /* Typical EVA secondary */
-    --eva-text-glow: 0 0 5px var(--eva-red), 0 0 10px var(--eva-red);
-    --grid-color: rgba(255, 0, 0, 0.15);
-    
+    --eva-red: #cc0000;
+    /* Darker red for frames/boxes */
+    --eva-orange: #ffaa00;
+    /* The iconic amber/orange color for numbers */
+    --eva-yellow: #ffdd00;
+    /* Brighter accents */
+    --eva-text-glow: 0 0 5px var(--eva-orange), 0 0 10px var(--eva-orange);
+    --grid-color: rgba(255, 170, 0, 0.1);
+    /* Orange tinted grid */
+
     --font-main: 'Share Tech Mono', monospace;
+    --font-jp: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+/* Critical Mode Logic (Red Shift) */
+body.mode-critical {
+    --eva-orange: #ff0000;
+    /* Override Orange with Red */
+    --eva-yellow: #ff0000;
+    /* Override Yellow with Red */
+    --eva-red: #ff0000;
+    /* Make borders brighter red */
+    --grid-color: rgba(255, 0, 0, 0.2);
 }
 
 * {
@@ -17,31 +33,31 @@
 
 body {
     background-color: var(--eva-bg);
-    color: var(--eva-red);
+    color: var(--eva-orange);
     font-family: var(--font-main);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    /* Subtle background grid noise */
-    background-image: 
+    background-image:
         linear-gradient(var(--grid-color) 1px, transparent 1px),
         linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
     background-size: 40px 40px;
+    transition: --eva-orange 0.5s, --eva-red 0.5s;
+    /* Smooth transition */
 }
 
 .eva-container {
     display: flex;
     width: 95%;
-    max-width: 1000px; /* Limit max width for that cinematic aspect ratio */
-    height: 80vh; /* Fill most of screen */
-    max-height: 600px;
-    gap: 1rem;
+    max-width: 1100px;
+    height: 85vh;
+    max-height: 650px;
+    gap: 1.5rem;
     position: relative;
-    border: 2px solid var(--eva-red);
-    padding: 2rem;
-    /* Main container is the "frame" */
+    /* Main outer border is less visible in this style, usually just the panels */
+    padding: 1rem;
 }
 
 /* --- Left Main Panel --- */
@@ -50,26 +66,53 @@ body {
     display: flex;
     flex-direction: column;
     position: relative;
-    border-right: 4px solid var(--eva-red);
-    padding-right: 1rem;
+    /* Large left bracket shape */
+    border-left: 8px solid var(--eva-orange);
+    border-top: 4px solid var(--eva-orange);
+    padding: 1rem 0 1rem 2rem;
 }
 
 /* Header Labels */
 .panel-header {
-    border-bottom: 2px solid var(--eva-red);
-    margin-bottom: 1rem;
+    margin-bottom: 0rem;
     display: flex;
-    align-items: baseline;
+    align-items: flex-end;
+    /* Align bottom of text */
+    gap: 1rem;
+    color: var(--eva-orange);
+    font-family: var(--font-jp);
+    font-weight: 900;
+}
+
+.header-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.label-large {
+    font-size: 3rem;
+    line-height: 1;
+    transform: scaleY(1.2);
+    /* Tall condensed look */
+    letter-spacing: -2px;
+    text-shadow: 0 0 5px var(--eva-orange);
 }
 
 .label-small {
-    font-size: 1rem;
-    letter-spacing: 2px;
-    background: var(--eva-bg);
-    padding-right: 10px;
+    font-size: 2rem;
+    line-height: 1;
+    margin-top: 5px;
 }
 
-/* Visually Hidden but accessible h1 */
+.label-tiny {
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+/* Visually Hidden */
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -85,82 +128,70 @@ body {
 .display-area {
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    /* Left numbers often in this view */
     align-items: center;
-    font-size: clamp(4rem, 15vw, 10rem); /* Responsive font size */
-    background: radial-gradient(circle, rgba(50,0,0,0.5) 0%, rgba(0,0,0,1) 80%);
-    border: 1px solid var(--eva-red);
-    margin-bottom: 2rem;
+    font-size: clamp(6rem, 20vw, 12rem);
+    /* Removed radial bg, pure black usually */
+    margin: 1rem 0;
     position: relative;
 }
 
 .time-display {
-    color: var(--eva-red);
-    text-shadow: var(--eva-text-glow);
+    color: var(--eva-orange);
+    text-shadow: 0 0 10px var(--eva-orange), 0 0 20px var(--eva-orange);
     font-variant-numeric: tabular-nums;
-    letter-spacing: 5px;
+    letter-spacing: 0px;
+    line-height: 1;
 }
 
 /* Controls (Buttons) */
 .controls-area {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 15px;
+    margin-top: auto;
 }
 
 .eva-btn {
     background: black;
-    color: var(--eva-red);
-    border: 2px solid var(--eva-red);
+    color: var(--eva-orange);
+    border: 2px solid var(--eva-orange);
     font-family: var(--font-main);
     font-size: 1.2rem;
-    padding: 10px 0;
+    font-weight: bold;
+    padding: 15px 0;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.1s;
     position: relative;
-    overflow: hidden;
+    /* Cut corners */
+    clip-path: polygon(10px 0, 100% 0,
+            100% calc(100% - 10px), calc(100% - 10px) 100%,
+            0 100%, 0 10px);
 }
 
 .eva-btn:hover {
-    background: var(--eva-red);
+    background: var(--eva-orange);
     color: black;
-    box-shadow: 0 0 15px var(--eva-red);
+    box-shadow: 0 0 20px var(--eva-orange);
 }
 
 .eva-btn:active {
     transform: scale(0.98);
 }
 
-.eva-btn:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
-}
-
-.eva-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    border-color: #550000;
-    color: #550000;
-    box-shadow: none;
-}
-.eva-btn:disabled:hover {
-    background: black;
-    color: #550000;
-}
-
-
 /* Decoration: The jagged corner at bottom left */
-/* We can achieve this specific shape with a pseudo element or extra div */
 .deco-corner-bottom {
     position: absolute;
-    bottom: -2rem; 
-    left: -2rem;
-    width: 150px;
-    height: 150px;
-    background: var(--eva-red);
-    clip-path: polygon(0 100%, 100% 100%, 0 0); /* Triangle at bottom left */
+    bottom: -10px;
+    left: -20px;
+    width: 200px;
+    height: 100px;
+    background: var(--eva-orange);
+    clip-path: polygon(0 100%, 100% 100%, 0 0);
     z-index: -1;
+    opacity: 0.8;
 }
 
 /* --- Right Side Panel --- */
@@ -168,108 +199,126 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    min-width: 150px;
+    gap: 1.5rem;
+    min-width: 200px;
+    padding-top: 2rem;
 }
 
+/* Right side boxes usually keep RED even in Orange UI */
 .info-box {
     border: 2px solid var(--eva-red);
+    box-shadow: 0 0 10px var(--eva-red), inset 0 0 10px var(--eva-red);
     flex: 1;
     position: relative;
     display: flex;
-    justify-content: space-between; /* Text left, stripes right */
+    justify-content: space-between;
     overflow: hidden;
+    background: rgba(50, 0, 0, 0.3);
 }
 
 .box-labels {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0.5rem;
+    padding: 1rem;
     z-index: 2;
-    background: transparent;
+    color: var(--eva-red);
 }
 
 .kanji {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-family: var(--font-jp);
+    font-weight: 900;
     line-height: 1;
     margin-bottom: 0.5rem;
+    text-shadow: 0 0 5px var(--eva-red);
 }
 
 .english {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
     letter-spacing: 2px;
 }
 
 /* Warning Stripes Pattern */
 .stripes {
-    width: 40px;
+    width: 60px;
     height: 100%;
-    background: repeating-linear-gradient(
-        -45deg,
-        var(--eva-red),
-        var(--eva-red) 10px,
-        black 10px,
-        black 20px
-    );
+    background: repeating-linear-gradient(-45deg,
+            var(--eva-red),
+            var(--eva-red) 15px,
+            black 15px,
+            black 30px);
     border-left: 2px solid var(--eva-red);
 }
 
 .info-box-middle {
-    height: 50px;
+    height: 60px;
     border: 1px solid var(--eva-red);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 0, 0, 0.1);
+    background: rgba(50, 0, 0, 0.5);
+    color: var(--eva-red);
+    box-shadow: 0 0 5px var(--eva-red);
 }
 
 .english-tiny {
-    font-size: 0.6rem;
-    opacity: 0.8;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
 }
 
-/* Shortcuts Hint at bottom */
+/* Shortcuts Hint */
 .shortcuts-hint {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    color: var(--eva-red);
+    color: var(--eva-orange);
     font-size: 0.8rem;
-    opacity: 0.5;
+    opacity: 0.4;
+    font-family: var(--font-main);
     pointer-events: none;
 }
 
 /* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .eva-container {
         flex-direction: column;
         height: auto;
-        padding: 1rem;
+        padding: 0.5rem;
+        border: none;
     }
 
     .main-panel {
-        border-right: none;
-        border-bottom: 4px solid var(--eva-red);
-        padding-right: 0;
-        padding-bottom: 1rem;
+        border-left: 4px solid var(--eva-orange);
+        padding: 1rem;
+    }
+
+    .label-large {
+        font-size: 2rem;
+    }
+
+    .display-area {
+        font-size: 15vw;
+        justify-content: center;
     }
 
     .side-panel {
         flex-direction: row;
-        height: 100px;
+        height: auto;
+        padding-top: 0;
     }
-    
+
+    .info-box {
+        height: 80px;
+    }
+
     .stripes {
         width: 30px;
     }
 
     .controls-area {
-        grid-template-columns: repeat(2, 1fr); /* 2x2 grid on mobile */
-    }
-    
-    .display-area {
-        min-height: 150px;
+        grid-template-columns: repeat(4, 1fr);
     }
 }
