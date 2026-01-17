@@ -19,7 +19,8 @@ const displayEl = document.getElementById('timeDisplay');
 const btnStart = document.getElementById('btnStart');
 const btnStop = document.getElementById('btnStop');
 const btnReset = document.getElementById('btnReset');
-const btnSetup = document.getElementById('btnSetup');
+const btnMin = document.getElementById('btnMin');
+const btnSec = document.getElementById('btnSec');
 
 /**
  * Formats time in MM:SS:CC (Centiseconds)
@@ -94,10 +95,6 @@ function stopTimer() {
 }
 
 function resetTimer() {
-    // Can generally reset at any time, but standard behavior usually implies stop first or just force it.
-    // User requirement: "Reset to 0 (execute when stopped, or if running stopped->reset is ok, consistent behavior)"
-
-    // Check if running, if so stop first
     if (isRunning) {
         stopTimer();
     }
@@ -107,11 +104,15 @@ function resetTimer() {
     updateButtonStates();
 }
 
-function setupTimer() {
-    // Requirement: "+1 minute to display initial value (only when stopped)"
+function addMinute() {
     if (isRunning) return;
+    elapsedDuration += 60000;
+    updateDisplay();
+}
 
-    elapsedDuration += 60000; // 60 seconds * 1000
+function addSecond() {
+    if (isRunning) return;
+    elapsedDuration += 1000;
     updateDisplay();
 }
 
@@ -124,12 +125,10 @@ function toggleTimer() {
 }
 
 function updateButtonStates() {
-    // Disable Start if running
     btnStart.disabled = isRunning;
-    // Disable Stop if not running
     btnStop.disabled = !isRunning;
-    // Disable Setup if running
-    btnSetup.disabled = isRunning;
+    btnMin.disabled = isRunning;
+    btnSec.disabled = isRunning;
 }
 
 // --- Event Listeners ---
@@ -137,7 +136,8 @@ function updateButtonStates() {
 btnStart.addEventListener('click', startTimer);
 btnStop.addEventListener('click', stopTimer);
 btnReset.addEventListener('click', resetTimer);
-btnSetup.addEventListener('click', setupTimer);
+btnMin.addEventListener('click', addMinute);
+btnSec.addEventListener('click', addSecond);
 
 // Episode Count Logic
 const episodeDisplay = document.getElementById('episodeDisplay');
@@ -163,7 +163,8 @@ document.addEventListener('keydown', (e) => {
             resetTimer();
             break;
         case 'KeyS':
-            setupTimer();
+            // S triggers +1 Minute (was setupTimer)
+            addMinute();
             break;
         case 'ArrowUp':
             e.preventDefault();
@@ -179,8 +180,4 @@ document.addEventListener('keydown', (e) => {
 // Init
 updateDisplay();
 updateButtonStates();
-
-// URL Query Check for "stopwatch" mode?
-// User requirement: "Compatible if ?stopwatch is present or not (default to stopwatch)"
-// Simply ignores it as it's the only mode.
 console.log("EVA SYSTEM READY");
