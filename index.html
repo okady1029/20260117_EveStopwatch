@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVA Stopwatch</title>
+    <!-- Google Fonts: Share Tech Mono is very close to the 7-segment/tech vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="eva-container">
+        <!-- Main jagged panel -->
+        <main class="main-panel">
+            <header class="panel-header">
+                <span class="label-small">ACTIVE TIME REMAINING:</span>
+                <h1 class="visually-hidden">EVA Stopwatch</h1>
+            </header>
+            
+            <div class="display-area">
+                <div class="time-display" id="timeDisplay">00:00:00</div>
+            </div>
+
+            <div class="controls-area">
+                <button type="button" id="btnStart" class="eva-btn" aria-label="Start Timer">START</button>
+                <button type="button" id="btnStop" class="eva-btn" aria-label="Stop Timer">STOP</button>
+                <button type="button" id="btnReset" class="eva-btn" aria-label="Reset Timer">RESET</button>
+                <button type="button" id="btnSetup" class="eva-btn" aria-label="Add 1 Minute">SETUP</button>
+            </div>
+            
+            <!-- Deco element: Left diagonal bottom shape -->
+            <div class="deco-corner-bottom"></div>
+        </main>
+
+        <!-- Right side info stack -->
+        <aside class="side-panel">
+            <div class="info-box internal">
+                <div class="box-labels">
+                    <span class="kanji">内部</span>
+                    <span class="english">INTERNAL</span>
+                </div>
+                <div class="stripes"></div>
+            </div>
+            
+            <div class="info-box-middle">
+                <span>主電源供給システム</span>
+                <span class="english-tiny">MAIN ENERGY SUPPLY SYSTEM</span>
+            </div>
+
+            <div class="info-box external">
+                <div class="box-labels">
+                    <span class="kanji">外部</span>
+                    <span class="english">EXTERNAL</span>
+                </div>
+                <div class="stripes"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Keyboard shortcut hints overlay (optional/subtle) -->
+    <div class="shortcuts-hint" aria-hidden="true">
+        Space: Start/Stop | R: Reset | S: Setup (+1min)
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
